@@ -189,16 +189,16 @@ export default function CustomerSupportPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="mobile-container sm:space-y-6">
+      <div className="mobile-header sm:flex sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Customer Support</h1>
-          <p className="text-gray-600 mt-1">Manage customer reviews and provide real-time support</p>
+          <h1 className="mobile-header-title sm:text-3xl sm:font-bold text-gray-900">Customer Support</h1>
+          <p className="mobile-text-sm sm:text-gray-600 sm:mt-1">Manage customer reviews and provide real-time support</p>
         </div>
       </div>
 
       {/* Support Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="mobile-grid-1 sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
@@ -273,14 +273,14 @@ export default function CustomerSupportPage() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="mobile-card sm:bg-white sm:rounded-xl sm:border sm:border-gray-100 sm:shadow-sm sm:overflow-hidden">
         <div className="border-b border-gray-100">
-          <nav className="flex space-x-8 px-6">
+          <nav className="mobile-btn-group sm:flex sm:space-x-8 mobile-container sm:px-6">
             <button
               onClick={() => setActiveTab('chat')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`mobile-nav-item sm:py-4 sm:px-1 sm:border-b-2 font-medium mobile-text-sm sm:text-sm transition-colors ${
                 activeTab === 'chat'
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-blue-500 text-blue-600 bg-blue-600 text-white sm:bg-transparent sm:text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -289,9 +289,9 @@ export default function CustomerSupportPage() {
             </button>
             <button
               onClick={() => setActiveTab('reviews')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`mobile-nav-item sm:py-4 sm:px-1 sm:border-b-2 font-medium mobile-text-sm sm:text-sm transition-colors ${
                 activeTab === 'reviews'
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-blue-500 text-blue-600 bg-blue-600 text-white sm:bg-transparent sm:text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -303,16 +303,16 @@ export default function CustomerSupportPage() {
 
         {/* Chat Support Tab */}
         {activeTab === 'chat' && (
-          <div className="flex h-[600px]">
+          <div className="mobile-stack sm:flex h-auto sm:h-[600px]">
             {/* Chat List */}
-            <div className="w-1/3 border-r border-gray-100 flex flex-col">
-              <div className="p-4 border-b border-gray-100">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <div className="mobile-full-width sm:w-1/3 sm:border-r sm:border-gray-100 flex flex-col mobile-card-compact sm:bg-transparent sm:border-none sm:rounded-none sm:shadow-none sm:p-0 sm:m-0">
+              <div className="mobile-container sm:p-4 sm:border-b sm:border-gray-100">
+                <div className="mobile-search-container sm:relative">
+                  <Search className="mobile-search-icon sm:absolute sm:left-3 sm:top-1/2 sm:transform sm:-translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="text"
                     placeholder="Search conversations..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="mobile-search-input sm:w-full sm:pl-10 sm:pr-4 sm:py-2 sm:border sm:border-gray-200 sm:rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -458,22 +458,22 @@ export default function CustomerSupportPage() {
 
         {/* Reviews Management Tab */}
         {activeTab === 'reviews' && (
-          <div className="p-6">
+          <div className="mobile-container sm:p-6">
             {/* Reviews Header */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <div className="mobile-stack sm:flex sm:items-center sm:justify-between mb-6">
+              <div className="mobile-stack sm:flex sm:items-center sm:space-x-4">
+                <div className="mobile-search-container sm:relative">
+                  <Search className="mobile-search-icon sm:absolute sm:left-3 sm:top-1/2 sm:transform sm:-translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="text"
                     placeholder="Search reviews..."
-                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="mobile-search-input sm:pl-10 sm:pr-4 sm:py-2 sm:border sm:border-gray-200 sm:rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <select
                   value={reviewFilter}
                   onChange={(e) => setReviewFilter(e.target.value)}
-                  className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mobile-btn sm:px-4 sm:py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 >
                   <option value="all">All Reviews</option>
                   <option value="published">Published</option>
@@ -484,19 +484,19 @@ export default function CustomerSupportPage() {
             </div>
 
             {/* Reviews List */}
-            <div className="space-y-4">
+            <div className="mobile-spacing-normal">
               {filteredReviews.map((review) => (
-                <div key={review.id} className="bg-gray-50 rounded-lg p-6 border border-gray-100">
-                  <div className="flex items-start justify-between">
+                <div key={review.id} className="mobile-card sm:bg-gray-50 sm:rounded-lg sm:p-6 sm:border sm:border-gray-100">
+                  <div className="mobile-stack sm:flex sm:items-start sm:justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center space-x-4 mb-3">
+                      <div className="mobile-stack sm:flex sm:items-center sm:space-x-4 mb-3">
                         <div className="flex items-center space-x-2">
                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-medium text-sm">
                             {review.customerName.split(' ').map(n => n[0]).join('')}
                           </div>
                           <div>
                             <h4 className="font-medium text-gray-900">{review.customerName}</h4>
-                            <p className="text-sm text-gray-500">{review.timestamp}</p>
+                            <p className="mobile-text-sm text-gray-500">{review.timestamp}</p>
                           </div>
                         </div>
                         
@@ -511,12 +511,12 @@ export default function CustomerSupportPage() {
                               }`}
                             />
                           ))}
-                          <span className="ml-2 text-sm font-medium text-gray-600">
+                          <span className="ml-2 mobile-text-sm font-medium text-gray-600">
                             ({review.rating}.0)
                           </span>
                         </div>
 
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full mobile-text-xs font-medium ${
                           review.status === 'published' ? 'bg-green-100 text-green-800' :
                           review.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-red-100 text-red-800'
@@ -527,27 +527,27 @@ export default function CustomerSupportPage() {
 
                       <p className="text-gray-700 mb-4">{review.comment}</p>
                       
-                      <div className="flex items-center space-x-6 text-sm text-gray-500">
+                      <div className="mobile-stack sm:flex sm:items-center sm:space-x-6 mobile-text-sm text-gray-500">
                         <span>Order: {review.orderId}</span>
                         <span>Partner: {review.partnerName}</span>
                         <span>Category: {review.category}</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-2 ml-4">
-                      <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded">
+                    <div className="flex items-center justify-center space-x-2 sm:ml-4 mt-4 sm:mt-0">
+                      <button className="mobile-touch-target p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded">
                         <Reply className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded">
+                      <button className="mobile-touch-target p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded">
                         <CheckCircle className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded">
+                      <button className="mobile-touch-target p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded">
                         <Flag className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+                      <button className="mobile-touch-target p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
                         <Archive className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+                      <button className="mobile-touch-target p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
                         <MoreVertical className="w-4 h-4" />
                       </button>
                     </div>

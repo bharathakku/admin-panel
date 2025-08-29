@@ -23,7 +23,7 @@ export default function StatsCard({
 
   return (
     <article 
-      className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2"
+      className="mobile-card sm:bg-white sm:p-6 sm:rounded-xl sm:border sm:border-gray-100 sm:shadow-sm hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2"
       role="region"
       aria-labelledby={valueId}
     >
@@ -37,7 +37,7 @@ export default function StatsCard({
         </div>
         {change && (
           <div 
-            className={`flex items-center text-sm font-medium ${
+            className={`flex items-center mobile-text-sm sm:text-sm font-medium ${
               changeType === "positive" ? "text-green-600" : "text-red-600"
             }`}
             id={changeId}
@@ -54,14 +54,14 @@ export default function StatsCard({
       </div>
       <div>
         <p 
-          className="text-2xl font-bold text-gray-900 mb-1" 
+          className="text-xl sm:text-2xl font-bold text-gray-900 mb-1" 
           id={valueId}
           aria-label={`${title}: ${value}`}
         >
           {value}
         </p>
         <p 
-          className="text-sm text-gray-600"
+          className="mobile-text-sm sm:text-sm text-gray-600"
           role="caption"
         >
           {title}

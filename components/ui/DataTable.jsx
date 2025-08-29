@@ -108,23 +108,23 @@ export default function DataTable({
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-100">
-        <div className="flex items-center justify-between">
+      <div className="mobile-container sm:px-6 sm:py-4 border-b border-gray-100">
+        <div className="mobile-header sm:flex sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+            <h2 className="mobile-header-title sm:text-lg sm:font-semibold sm:text-gray-900">{title}</h2>
             {description && (
-              <p className="text-sm text-gray-600 mt-1">{description}</p>
+              <p className="mobile-text-sm sm:text-sm text-gray-600 mt-1">{description}</p>
             )}
           </div>
           
-          <div className="flex items-center space-x-3">
+          <div className="mobile-header-actions sm:flex sm:items-center sm:space-x-3">
             {searchable && (
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <div className="mobile-search-container sm:relative">
+                <Search className="mobile-search-icon sm:absolute sm:left-3 sm:top-1/2 sm:transform sm:-translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="mobile-search-input sm:pl-10 sm:pr-4 sm:py-2 sm:border sm:border-gray-200 sm:rounded-lg sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -134,7 +134,7 @@ export default function DataTable({
             {filterable && (
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
+                className="mobile-btn sm:flex sm:items-center sm:px-3 sm:py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
               >
                 <Filter className="w-4 h-4 mr-2" />
                 Filter
@@ -145,8 +145,8 @@ export default function DataTable({
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div className="mobile-table sm:overflow-x-auto">
+        <table className="w-full responsive-hide-mobile">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
               {columns.map((column, index) => (
@@ -178,32 +178,54 @@ export default function DataTable({
             ))}
           </tbody>
         </table>
+        
+        {/* Mobile Card View */}
+        <div className="responsive-show-mobile mobile-container">
+          {paginatedData.map((row, rowIndex) => (
+            <div key={rowIndex} className="mobile-card">
+              {columns.map((column, colIndex) => (
+                <div key={colIndex} className="mobile-table-cell">
+                  <span className="mobile-table-label">{column.label}:</span>
+                  <span className="mobile-table-value">
+                    {column.render ? column.render(row[column.key], row) : row[column.key]}
+                  </span>
+                </div>
+              ))}
+              {actions && (
+                <div className="mobile-table-cell">
+                  <span className="mobile-table-label">Actions:</span>
+                  <KebabMenu orderId={row.id} />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Pagination */}
       {pagination && totalPages > 1 && (
-        <div className="px-6 py-3 border-t border-gray-100 flex items-center justify-between">
-          <div className="text-sm text-gray-700">
+        <div className="mobile-container sm:px-6 sm:py-3 border-t border-gray-100 mobile-stack sm:flex sm:items-center sm:justify-between">
+          <div className="mobile-text-center mobile-text-sm sm:text-sm text-gray-700">
             Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} results
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-center space-x-2">
             <button
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mobile-touch-target p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             
-            <span className="px-4 py-2 text-sm text-gray-700">
+            <span className="px-4 py-2 mobile-text-sm text-gray-700">
               Page {currentPage} of {totalPages}
             </span>
             
             <button
               onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage === totalPages}
-              className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mobile-touch-target p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

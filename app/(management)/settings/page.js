@@ -789,44 +789,33 @@ export default function SettingsPage() {
                   
                   {/* Interactive Coverage Map */}
                   <div className="mb-6 lg:mb-8">
-                    <div className="bg-white border border-gray-200 rounded-lg p-4 lg:p-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
-                        <h4 className="font-medium text-gray-900">Coverage Map</h4>
-                        <div className="flex flex-wrap gap-2">
-                          <button className="flex items-center justify-center px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 min-h-[44px] touch-manipulation">
-                            <Plus className="w-4 h-4 mr-1" />
-                            Draw Zone
-                          </button>
-                          <button className="flex items-center justify-center px-3 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 min-h-[44px] touch-manipulation">
-                            <Map className="w-4 h-4 mr-1" />
-                            Merge Zones
-                          </button>
-                        </div>
-                      </div>
-                      
-                      {/* Map Container - Responsive height */}
-                      <div className="bg-gray-100 rounded-lg overflow-hidden" style={{ height: 'clamp(250px, 50vh, 400px)' }}>
-                        <div className="w-full h-full flex items-center justify-center text-gray-500">
-                          <div className="text-center">
-                            <Map className="w-12 h-12 mx-auto mb-2 text-gray-400" />
-                            <p className="text-sm">Interactive Map Component</p>
-                            <p className="text-xs text-gray-400 mt-1">Touch and drag to draw zones</p>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Map Controls for Mobile */}
-                      <div className="lg:hidden mt-4 flex flex-wrap gap-2">
-                        <button className="flex-1 min-w-0 flex items-center justify-center px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 min-h-[44px] touch-manipulation">
-                          <Globe className="w-4 h-4 mr-1" />
-                          Reset View
-                        </button>
-                        <button className="flex-1 min-w-0 flex items-center justify-center px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 min-h-[44px] touch-manipulation">
-                          <Plus className="w-4 h-4 mr-1" />
-                          Zoom In
-                        </button>
-                      </div>
-                    </div>
+                    <CoverageMap
+                      zones={zones}
+                      onZoneCreate={(zone) => {
+                        console.log('Creating zone:', zone);
+                        setZones(prev => [...prev, { ...zone, id: Date.now() }]);
+                        showToast('Zone created successfully!');
+                      }}
+                      onZoneUpdate={(zoneId, updatedData) => {
+                        console.log('Updating zone:', zoneId, updatedData);
+                        setZones(prev => prev.map(z => z.id === zoneId ? { ...z, ...updatedData } : z));
+                        showToast('Zone updated successfully!');
+                      }}
+                      onZoneDelete={(zoneId) => {
+                        console.log('Deleting zone:', zoneId);
+                        setZones(prev => prev.filter(z => z.id !== zoneId));
+                        showToast('Zone deleted successfully!');
+                      }}
+                      onZonesMerge={(selectedZones, mergedZone) => {
+                        console.log('Merging zones:', selectedZones, mergedZone);
+                        setZones(prev => [
+                          ...prev.filter(z => !selectedZones.some(sz => sz.id === z.id)),
+                          { ...mergedZone, id: Date.now() }
+                        ]);
+                        showToast('Zones merged successfully!');
+                      }}
+                      className="h-64 sm:h-80 lg:h-96"
+                    />
                   </div>
                   
                   {/* Zones Management - Mobile Optimized */}

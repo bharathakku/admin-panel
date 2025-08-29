@@ -202,7 +202,6 @@ function PartnerActionsMenu({ partnerId, partnerName, onDelete, onSuspend }) {
 }
 
 export default function PartnersPage() {
-  const [searchTerm, setSearchTerm] = useState("");
   const [partners, setPartners] = useState(partnersData);
 
   const handleDeletePartner = (partnerId, partnerName) => {
@@ -228,100 +227,26 @@ export default function PartnersPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mobile-container sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Partners</h1>
-        <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
+      <div className="mobile-header sm:flex sm:items-center sm:justify-between">
+        <h1 className="mobile-header-title sm:text-2xl sm:font-bold text-gray-900">Partners</h1>
+        <button className="mobile-btn sm:flex sm:items-center sm:px-4 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
           <Plus className="w-4 h-4 mr-2" />
-          Add Customer
+          Add Partner
         </button>
       </div>
 
-      {/* Search */}
-      <div className="flex items-center justify-between">
-        <div className="relative w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search"
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </div>
-
       {/* Partners Table */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100">
-          <h2 className="text-sm font-medium text-gray-900">Driver List</h2>
-        </div>
-        
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subscription</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {partners
-                .filter(partner => 
-                  partner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  partner.contact.includes(searchTerm) ||
-                  partner.status.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-                .map((partner) => (
-                <tr key={partner.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <Link 
-                      href={`/partners/${partner.id}`}
-                      className="font-medium text-gray-900 hover:text-blue-600 cursor-pointer"
-                    >
-                      {partner.name}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{partner.contact}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 text-xs font-medium rounded-full border ${
-                      partner.status === 'Active' ? 'bg-green-50 text-green-600 border-green-200' :
-                      partner.status === 'Verification' ? 'bg-yellow-50 text-yellow-600 border-yellow-200' :
-                      partner.status === 'Suspended' ? 'bg-red-50 text-red-600 border-red-200' :
-                      'bg-gray-50 text-gray-600 border-gray-200'
-                    }`}>
-                      {partner.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 text-xs font-medium rounded ${
-                      partner.subscription === 'Premium' ? 'bg-purple-50 text-purple-600' :
-                      partner.subscription === 'Pro' ? 'bg-blue-50 text-blue-600' :
-                      'bg-gray-50 text-gray-600'
-                    }`}>
-                      {partner.subscription}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{partner.rating}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <PartnerActionsMenu 
-                      partnerId={partner.id}
-                      partnerName={partner.name}
-                      onDelete={handleDeletePartner}
-                      onSuspend={handleSuspendPartner}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <DataTable
+        title="Partners List"
+        description="Manage your delivery partners and their information"
+        columns={partnerColumns}
+        data={partners}
+        actions={true}
+        searchable={true}
+        filterable={true}
+      />
     </div>
   );
 }

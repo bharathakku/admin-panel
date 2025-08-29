@@ -116,24 +116,24 @@ const orderColumns = [
 
 export default function DashboardPage() {
   return (
-    <main className="space-y-8" role="main" aria-label="Dashboard">
+    <main className="mobile-container sm:space-y-8" role="main" aria-label="Dashboard">
       {/* Page Header with accessibility */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <header className="mobile-header sm:flex sm:flex-col sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900" id="dashboard-title">
+          <h1 className="mobile-header-title sm:text-4xl sm:font-bold text-gray-900" id="dashboard-title">
             Dashboard
           </h1>
-          <p className="text-gray-600 mt-2 text-lg">
+          <p className="mobile-text-sm sm:text-gray-600 sm:mt-2 sm:text-lg">
             Welcome back! Here&apos;s what&apos;s happening with your business today.
           </p>
         </div>
-        <div className="flex items-center space-x-4" role="status" aria-live="polite">
-          <div className="text-right">
-            <p className="text-sm text-gray-500">Last updated</p>
-            <p className="text-sm font-medium text-gray-900">2 minutes ago</p>
+        <div className="mobile-stack sm:flex sm:items-center sm:space-x-4" role="status" aria-live="polite">
+          <div className="mobile-text-center sm:text-right">
+            <p className="mobile-text-sm sm:text-sm text-gray-500">Last updated</p>
+            <p className="mobile-text-sm sm:text-sm font-medium text-gray-900">2 minutes ago</p>
           </div>
           <div 
-            className="w-3 h-3 bg-green-400 rounded-full animate-pulse" 
+            className="w-3 h-3 bg-green-400 rounded-full animate-pulse mx-auto sm:mx-0" 
             aria-label="Live data indicator"
             title="Data is updating in real-time"
           ></div>

@@ -3,6 +3,186 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile CSS Utilities - Included directly */
+
+/* Mobile-first breakpoints */
+@media (max-width: 450px) {
+  /* Container utilities */
+  .mobile-container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .mobile-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .mobile-full-width {
+    width: 100%;
+  }
+  
+  /* Header utilities */
+  .mobile-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .mobile-header-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  .mobile-header-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  /* Card utilities */
+  .mobile-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .mobile-card-compact {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Button utilities */
+  .mobile-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+  }
+  
+  .mobile-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  /* Text utilities */
+  .mobile-text-xs {
+    font-size: 0.75rem;
+  }
+  
+  .mobile-text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .mobile-text-center {
+    text-align: center;
+  }
+  
+  /* Table utilities */
+  .mobile-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .mobile-table-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0;
+  }
+  
+  .mobile-table-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+  }
+  
+  .mobile-table-value {
+    font-size: 0.875rem;
+    color: #111827;
+  }
+  
+  /* Navigation utilities */
+  .mobile-nav-item {
+    width: 100%;
+    padding: 0.75rem;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+  }
+  
+  /* Search utilities */
+  .mobile-search-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .mobile-search-input {
+    width: 100%;
+    padding-left: 2.5rem;
+    padding-right: 1rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+  }
+  
+  .mobile-search-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #3b82f6;
+    border-color: transparent;
+  }
+  
+  .mobile-search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+  }
+}
+
+/* Common responsive utilities */
+@media (min-width: 768px) {
+  .responsive-hide-mobile {
+    display: block;
+  }
+  .responsive-show-mobile {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .responsive-hide-mobile {
+    display: none;
+  }
+  .responsive-show-mobile {
+    display: block;
+  }
+}
+
+.mobile-touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
 /* Custom theme variables */
 :root {
   --brand-black: #000000;

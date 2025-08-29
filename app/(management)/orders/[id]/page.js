@@ -25,6 +25,7 @@ import {
 import Link from "next/link";
 import MapWrapper from '@/components/ui/MapWrapper';
 import ThreeDotMenu from "@/components/ui/ThreeDotMenu";
+import "./mobile-styles.css";
 
 // Mock order data - in a real app, this would come from an API
 const mockOrders = {
@@ -296,20 +297,24 @@ export default function OrderDetailsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4">
+        <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+          <div className="flex items-center space-x-3 sm:space-x-4">
             <button 
               onClick={() => router.back()}
-              className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+              className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 flex-shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <h1 className="text-xl font-bold text-gray-900">
-              Order Details — {orderId === 'ORD-10239' ? 'ORD-10239' : order.id}
-            </h1>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+                Order Details — {orderId === 'ORD-10239' ? 'ORD-10239' : order.id}
+              </h1>
+            </div>
           </div>
-          <div className="flex items-center space-x-3">
+          
+          {/* Desktop Actions */}
+          <div className="hidden sm:flex items-center space-x-3">
             <Link
               href={`/orders/${order.id}/track`}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium flex items-center"
@@ -352,26 +357,72 @@ export default function OrderDetailsPage() {
               }}
             />
           </div>
+          
+          {/* Mobile Actions */}
+          <div className="flex sm:hidden items-center space-x-2">
+            <Link
+              href={`/orders/${order.id}/track`}
+              className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium flex items-center justify-center"
+            >
+              <MapPin className="w-4 h-4 mr-1" />
+              Track
+            </Link>
+            <button 
+              onClick={() => setAssignOpen(true)} 
+              className="flex-1 px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm font-medium"
+            >
+              Assign
+            </button>
+            <ThreeDotMenu
+              type="order"
+              itemId={order.id}
+              itemData={order}
+              size="sm"
+              onAction={(action, data) => {
+                console.log('Order action:', action, data);
+                // Handle actions like call, reassign, cancel, etc.
+                switch (action) {
+                  case 'call':
+                    if (data.target === 'customer') {
+                      window.open(`tel:${order.customer.phone}`);
+                    } else if (data.target === 'driver') {
+                      window.open(`tel:${order.driver?.phone}`);
+                    }
+                    break;
+                  case 'reassign':
+                    setAssignOpen(true);
+                    break;
+                  case 'cancel':
+                    if (confirm('Are you sure you want to cancel this order?')) {
+                      alert('Order cancellation functionality would be implemented here');
+                    }
+                    break;
+                  default:
+                    alert(`${action} functionality would be implemented here`);
+                }
+              }}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="p-3 sm:p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-6">
           {/* Customer Section */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Customer</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Name</span>
-                <span className="text-sm font-medium text-gray-900">{order.customer.name}</span>
+          <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6">Customer</h3>
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex justify-between items-start">
+                <span className="text-sm text-gray-600 flex-shrink-0">Name</span>
+                <span className="text-sm font-medium text-gray-900 text-right ml-2">{order.customer.name}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Phone</span>
-                <span className="text-sm font-medium text-gray-900">{order.customer.phone}</span>
+              <div className="flex justify-between items-start">
+                <span className="text-sm text-gray-600 flex-shrink-0">Phone</span>
+                <span className="text-sm font-medium text-gray-900 text-right ml-2 break-all">{order.customer.phone}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Email</span>
-                <span className="text-sm font-medium text-gray-900 truncate ml-2">{order.customer.email}</span>
+              <div className="flex justify-between items-start">
+                <span className="text-sm text-gray-600 flex-shrink-0">Email</span>
+                <span className="text-sm font-medium text-gray-900 text-right ml-2 break-all">{order.customer.email}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Total Orders</span>
@@ -385,16 +436,16 @@ export default function OrderDetailsPage() {
           </div>
 
           {/* Partner Section */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Partner</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Name</span>
-                <span className="text-sm font-medium text-gray-900">{assignedPartner?.name || 'Unassigned'}</span>
+          <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6">Partner</h3>
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex justify-between items-start">
+                <span className="text-sm text-gray-600 flex-shrink-0">Name</span>
+                <span className="text-sm font-medium text-gray-900 text-right ml-2">{assignedPartner?.name || 'Unassigned'}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Phone</span>
-                <span className="text-sm font-medium text-gray-900">{assignedPartner?.phone || '-'}</span>
+              <div className="flex justify-between items-start">
+                <span className="text-sm text-gray-600 flex-shrink-0">Phone</span>
+                <span className="text-sm font-medium text-gray-900 text-right ml-2 break-all">{assignedPartner?.phone || '-'}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Subscription</span>
@@ -412,16 +463,17 @@ export default function OrderDetailsPage() {
           </div>
 
           {/* Map Section */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Live Tracking Map</h3>
+          <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">Live Tracking Map</h3>
               <div className="flex items-center space-x-2">
                 <Link 
                   href={`/orders/${order.id}/track`}
-                  className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-lg hover:bg-blue-200 flex items-center"
+                  className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 text-xs sm:text-sm rounded-lg hover:bg-blue-200 flex items-center"
                 >
-                  <Navigation className="w-4 h-4 mr-1" />
-                  Full Screen
+                  <Navigation className="w-3 sm:w-4 h-3 sm:h-4 mr-1" />
+                  <span className="hidden xs:inline">Full Screen</span>
+                  <span className="xs:hidden">Full</span>
                 </Link>
               </div>
             </div>
@@ -443,7 +495,7 @@ export default function OrderDetailsPage() {
                 lastUpdated: '2 min ago'
               }}
               driverName={order.driver?.name || 'Driver'}
-              height="h-64"
+              height="h-48 sm:h-64"
               showControls={true}
               showRoute={true}
             />
@@ -451,73 +503,124 @@ export default function OrderDetailsPage() {
 
           {/* Order Timeline Section - spans full width below */}
           <div className="lg:col-span-4">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Order Timeline</h3>
+            <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6">Order Timeline</h3>
               
-              {/* Progress bar */}
-              <div className="flex items-center justify-between mb-8 px-4">
-                {order.timeline.map((step, index) => {
-                  const isCompleted = step.completed;
-                  const isCurrent = step.current;
-                  const isLast = index === order.timeline.length - 1;
-                  
-                  return (
-                    <div key={index} className="flex flex-col items-center relative">
-                      {/* Progress line */}
-                      {!isLast && (
-                        <div className={`absolute top-4 left-12 w-full h-0.5 ${
-                          isCompleted ? 'bg-green-500' : 'bg-gray-200'
-                        }`} style={{ width: '120px' }} />
-                      )}
-                      
-                      {/* Step indicator */}
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center relative z-10 ${
-                        isCompleted 
-                          ? isCurrent 
-                            ? 'bg-green-500 text-white' 
-                            : 'bg-green-500 text-white'
-                          : 'bg-gray-200 text-gray-400'
-                      }`}>
-                        {isCompleted ? (
-                          <CheckCircle className="w-5 h-5" />
-                        ) : (
-                          <div className="w-3 h-3 rounded-full bg-white" />
+              {/* Mobile Timeline - Vertical Layout for small screens */}
+              <div className="block sm:hidden">
+                <div className="space-y-4">
+                  {order.timeline.map((step, index) => {
+                    const isCompleted = step.completed;
+                    const isCurrent = step.current;
+                    const isLast = index === order.timeline.length - 1;
+                    
+                    return (
+                      <div key={index} className="flex items-center space-x-3 relative">
+                        {/* Vertical line */}
+                        {!isLast && (
+                          <div className={`absolute left-4 top-8 w-0.5 h-8 ${
+                            isCompleted ? 'bg-green-500' : 'bg-gray-200'
+                          }`} />
                         )}
-                      </div>
-                      
-                      {/* Step label */}
-                      <div className="mt-2 text-center">
-                        <p className={`text-xs font-medium ${
-                          isCompleted ? 'text-gray-900' : 'text-gray-500'
+                        
+                        {/* Step indicator */}
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center relative z-10 flex-shrink-0 ${
+                          isCompleted 
+                            ? isCurrent 
+                              ? 'bg-green-500 text-white' 
+                              : 'bg-green-500 text-white'
+                            : 'bg-gray-200 text-gray-400'
                         }`}>
-                          {step.status}
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          {step.time}
-                        </p>
+                          {isCompleted ? (
+                            <CheckCircle className="w-4 h-4" />
+                          ) : (
+                            <div className="w-3 h-3 rounded-full bg-white" />
+                          )}
+                        </div>
+                        
+                        {/* Step content */}
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm font-medium ${
+                            isCompleted ? 'text-gray-900' : 'text-gray-500'
+                          }`}>
+                            {step.status}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            {step.time}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Desktop Timeline - Horizontal Layout */}
+              <div className="hidden sm:block">
+                <div className="flex items-center justify-between mb-8 px-4 overflow-x-auto">
+                  {order.timeline.map((step, index) => {
+                    const isCompleted = step.completed;
+                    const isCurrent = step.current;
+                    const isLast = index === order.timeline.length - 1;
+                    
+                    return (
+                      <div key={index} className="flex flex-col items-center relative flex-shrink-0">
+                        {/* Progress line */}
+                        {!isLast && (
+                          <div className={`absolute top-4 left-8 w-20 lg:w-24 xl:w-32 h-0.5 ${
+                            isCompleted ? 'bg-green-500' : 'bg-gray-200'
+                          }`} />
+                        )}
+                        
+                        {/* Step indicator */}
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center relative z-10 ${
+                          isCompleted 
+                            ? isCurrent 
+                              ? 'bg-green-500 text-white' 
+                              : 'bg-green-500 text-white'
+                            : 'bg-gray-200 text-gray-400'
+                        }`}>
+                          {isCompleted ? (
+                            <CheckCircle className="w-5 h-5" />
+                          ) : (
+                            <div className="w-3 h-3 rounded-full bg-white" />
+                          )}
+                        </div>
+                        
+                        {/* Step label */}
+                        <div className="mt-3 text-center max-w-20 lg:max-w-24">
+                          <p className={`text-xs font-medium leading-tight ${
+                            isCompleted ? 'text-gray-900' : 'text-gray-500'
+                          }`}>
+                            {step.status}
+                          </p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            {step.time}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
               
               {/* Additional order info */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-gray-100">
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">Order Type</p>
-                  <p className="text-lg font-semibold text-gray-900">{order.orderType}</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-gray-100">
+                <div className="text-center p-3 sm:p-0">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-1">Order Type</p>
+                  <p className="text-sm sm:text-lg font-semibold text-gray-900">{order.orderType}</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">Distance</p>
-                  <p className="text-lg font-semibold text-gray-900">{order.distance}</p>
+                <div className="text-center p-3 sm:p-0">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-1">Distance</p>
+                  <p className="text-sm sm:text-lg font-semibold text-gray-900">{order.distance}</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">Duration</p>
-                  <p className="text-lg font-semibold text-gray-900">{order.estimatedTime}</p>
+                <div className="text-center p-3 sm:p-0">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-1">Duration</p>
+                  <p className="text-sm sm:text-lg font-semibold text-gray-900">{order.estimatedTime}</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">Amount</p>
-                  <p className="text-lg font-semibold text-gray-900">{order.amount}</p>
+                <div className="text-center p-3 sm:p-0">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-1">Amount</p>
+                  <p className="text-sm sm:text-lg font-semibold text-gray-900">{order.amount}</p>
                 </div>
               </div>
             </div>

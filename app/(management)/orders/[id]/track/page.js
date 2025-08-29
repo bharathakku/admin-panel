@@ -202,26 +202,42 @@ export default function OrderTrackingPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+      <div className="bg-white border-b border-gray-200 px-3 sm:px-6 py-4">
+        <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+          <div className="flex items-center space-x-3 sm:space-x-4">
             <button 
               onClick={() => router.back()}
-              className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+              className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 flex-shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
                 Track Order — {trackingData.id}
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600 truncate">
                 Live tracking • Last updated {trackingData.driver.currentLocation.lastUpdated}
               </p>
             </div>
           </div>
           
-          <div className="flex items-center space-x-3">
+          {/* Status Badge - Mobile */}
+          <div className="flex sm:hidden justify-center">
+            <div className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+              trackingData.status === 'In Transit' 
+                ? 'bg-purple-100 text-purple-800' 
+                : trackingData.status === 'Assigned'
+                ? 'bg-blue-100 text-blue-800'
+                : trackingData.status === 'Delivered'
+                ? 'bg-green-100 text-green-800'
+                : 'bg-gray-100 text-gray-800'
+            }`}>
+              {trackingData.status}
+            </div>
+          </div>
+          
+          {/* Desktop Actions */}
+          <div className="hidden sm:flex items-center space-x-3">
             <div className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${
               trackingData.status === 'In Transit' 
                 ? 'bg-purple-100 text-purple-800' 
@@ -257,22 +273,49 @@ export default function OrderTrackingPage() {
               onAction={handleMenuAction}
             />
           </div>
+          
+          {/* Mobile Actions */}
+          <div className="flex sm:hidden space-x-2">
+            <button 
+              onClick={() => window.open(`tel:${trackingData.customer.phone}`)}
+              className="flex-1 flex items-center justify-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"
+            >
+              <Phone className="w-4 h-4 mr-1" />
+              Customer
+            </button>
+            
+            <button 
+              onClick={() => window.open(`tel:${trackingData.driver.phone}`)}
+              className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+            >
+              <Phone className="w-4 h-4 mr-1" />
+              Driver
+            </button>
+            
+            <ThreeDotMenu
+              type="order"
+              itemId={trackingData.id}
+              itemData={trackingData}
+              size="sm"
+              onAction={handleMenuAction}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="p-3 sm:p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-6">
           {/* Map Section */}
-          <div className="lg:col-span-3">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Live Tracking Map</h3>
+          <div className="lg:col-span-3 order-2 lg:order-1">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-sm border border-gray-100">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900">Live Tracking Map</h3>
                 <div className="flex items-center space-x-2">
-                  <button className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-lg hover:bg-blue-200">
-                    <Navigation className="w-4 h-4 inline mr-1" />
+                  <button className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 text-xs sm:text-sm rounded-lg hover:bg-blue-200 flex-1 sm:flex-none">
+                    <Navigation className="w-3 sm:w-4 h-3 sm:h-4 inline mr-1" />
                     Directions
                   </button>
-                  <button className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-200">
+                  <button className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 text-xs sm:text-sm rounded-lg hover:bg-gray-200 flex-1 sm:flex-none">
                     Refresh
                   </button>
                 </div>
@@ -283,73 +326,73 @@ export default function OrderTrackingPage() {
                 drop={trackingData.drop}
                 currentLocation={trackingData.driver.currentLocation}
                 driverName={trackingData.driver.name}
-                height="h-[500px]"
+                height="h-64 sm:h-80 lg:h-[500px]"
                 showControls={true}
                 showRoute={true}
               />
               
               {/* Route Information */}
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <Clock className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">ETA</p>
-                  <p className="text-lg font-bold text-gray-900">{trackingData.estimatedTime}</p>
+              <div className="mt-4 sm:mt-6 grid grid-cols-3 gap-2 sm:gap-4">
+                <div className="text-center p-2 sm:p-4 bg-gray-50 rounded-lg">
+                  <Clock className="w-4 sm:w-6 h-4 sm:h-6 text-blue-600 mx-auto mb-1 sm:mb-2" />
+                  <p className="text-xs sm:text-sm text-gray-600">ETA</p>
+                  <p className="text-sm sm:text-lg font-bold text-gray-900">{trackingData.estimatedTime}</p>
                 </div>
-                <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <Navigation className="w-6 h-6 text-green-600 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">Distance</p>
-                  <p className="text-lg font-bold text-gray-900">{trackingData.distance}</p>
+                <div className="text-center p-2 sm:p-4 bg-gray-50 rounded-lg">
+                  <Navigation className="w-4 sm:w-6 h-4 sm:h-6 text-green-600 mx-auto mb-1 sm:mb-2" />
+                  <p className="text-xs sm:text-sm text-gray-600">Distance</p>
+                  <p className="text-sm sm:text-lg font-bold text-gray-900">{trackingData.distance}</p>
                 </div>
-                <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <Truck className="w-6 h-6 text-purple-600 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">Vehicle</p>
-                  <p className="text-lg font-bold text-gray-900">{trackingData.driver.vehicle}</p>
+                <div className="text-center p-2 sm:p-4 bg-gray-50 rounded-lg">
+                  <Truck className="w-4 sm:w-6 h-4 sm:h-6 text-purple-600 mx-auto mb-1 sm:mb-2" />
+                  <p className="text-xs sm:text-sm text-gray-600">Vehicle</p>
+                  <p className="text-xs sm:text-lg font-bold text-gray-900 break-all">{trackingData.driver.vehicle}</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-3 sm:space-y-6 order-1 lg:order-2">
             {/* Driver Information */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Driver Information</h3>
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-lg font-bold text-blue-600">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-sm border border-gray-100">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Driver Information</h3>
+              <div className="flex items-center space-x-3 sm:space-x-4 mb-3 sm:mb-4">
+                <div className="w-10 sm:w-12 h-10 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-sm sm:text-lg font-bold text-blue-600">
                     {trackingData.driver.name.split(' ').map(n => n[0]).join('')}
                   </span>
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900">{trackingData.driver.name}</p>
-                  <p className="text-sm text-gray-600">{trackingData.driver.phone}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium text-gray-900 text-sm sm:text-base">{trackingData.driver.name}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 break-all">{trackingData.driver.phone}</p>
                 </div>
               </div>
               
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Rating</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Rating</span>
                   <div className="flex items-center space-x-1">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="text-sm font-medium text-gray-900">{trackingData.driver.rating}</span>
+                    <Star className="w-3 sm:w-4 h-3 sm:h-4 text-yellow-400 fill-current" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-900">{trackingData.driver.rating}</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Vehicle</span>
-                  <span className="text-sm font-medium text-gray-900">{trackingData.driver.vehicle}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Vehicle</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-900 break-all ml-2">{trackingData.driver.vehicle}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Location</span>
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="text-xs sm:text-sm text-gray-600">Location</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-900 text-right ml-2">
                     {trackingData.driver.currentLocation.address.split(',')[0]}
                   </span>
                 </div>
               </div>
               
-              <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
                 <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm text-gray-600">
+                  <div className="w-2 sm:w-3 h-2 sm:h-3 bg-green-500 rounded-full animate-pulse flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm text-gray-600">
                     Live • Updated {trackingData.driver.currentLocation.lastUpdated}
                   </span>
                 </div>
@@ -357,43 +400,43 @@ export default function OrderTrackingPage() {
             </div>
 
             {/* Customer Information */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Details</h3>
-              <div className="space-y-3">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-sm border border-gray-100">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Customer Details</h3>
+              <div className="space-y-2 sm:space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Name</span>
-                  <span className="text-sm font-medium text-gray-900">{trackingData.customer.name}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Name</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-900 text-right ml-2">{trackingData.customer.name}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Phone</span>
-                  <span className="text-sm font-medium text-gray-900">{trackingData.customer.phone}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Phone</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-900 text-right ml-2 break-all">{trackingData.customer.phone}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Order Value</span>
-                  <span className="text-sm font-medium text-gray-900">{trackingData.amount}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Order Value</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-900">{trackingData.amount}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Type</span>
-                  <span className="text-sm font-medium text-gray-900">{trackingData.orderType}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Type</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-900 text-right ml-2">{trackingData.orderType}</span>
                 </div>
               </div>
             </div>
 
             {/* Order Timeline */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Timeline</h3>
-              <div className="space-y-4">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-sm border border-gray-100">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Order Timeline</h3>
+              <div className="space-y-3 sm:space-y-4">
                 {trackingData.timeline.map((step, index) => (
                   <div key={index} className="flex items-center space-x-3">
-                    <div className={`w-3 h-3 rounded-full ${
+                    <div className={`w-2 sm:w-3 h-2 sm:h-3 rounded-full flex-shrink-0 ${
                       step.completed 
                         ? step.current 
                           ? 'bg-blue-500 animate-pulse' 
                           : 'bg-green-500'
                         : 'bg-gray-300'
                     }`}></div>
-                    <div className="flex-1">
-                      <p className={`text-sm ${
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-xs sm:text-sm ${
                         step.completed ? 'text-gray-900 font-medium' : 'text-gray-500'
                       }`}>
                         {step.status}
