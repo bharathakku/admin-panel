@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, useMemo, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { 
   Settings as SettingsIcon,
@@ -74,7 +74,7 @@ import DeliverySettings from '@/components/ui/DeliverySettings';
 import dummyData, { zones as mockZones, filterConfigs } from '@/lib/data/dummyData';
 import { useApi, handleApiError } from '@/lib/api/apiHelpers';
 
-export default function SettingsPage() {
+function SettingsPageContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('general');
   const [isLoading, setIsLoading] = useState(false);
@@ -270,7 +270,7 @@ export default function SettingsPage() {
   };
   
   // API Integration Functions
-  const loadInitialData = async () => {
+  const loadInitialData = useCallback(async () => {
     setIsLoading(true);
     try {
       // Load data from APIs when component mounts
@@ -283,7 +283,7 @@ export default function SettingsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
   
   const saveAllSettings = async () => {
     setIsLoading(true);
@@ -300,7 +300,7 @@ export default function SettingsPage() {
     }
   };
   
-  const tabs = [
+  const tabs = useMemo(() => [
     { id: 'general', label: 'General', icon: SettingsIcon },
     { id: 'account', label: 'Account', icon: User },
     { id: 'pricing', label: 'Pricing & Promotions', icon: IndianRupee },
@@ -312,7 +312,7 @@ export default function SettingsPage() {
     { id: 'reports', label: 'Reports', icon: FileText },
     { id: 'security', label: 'Security', icon: Shield },
     { id: 'delivery', label: 'Delivery', icon: Truck }
-  ];
+  ], []);
 
   // Handle URL parameters for tab navigation
   useEffect(() => {
@@ -325,7 +325,7 @@ export default function SettingsPage() {
   // Load initial data on component mount
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [loadInitialData]);
 
   return (
     <div className="space-y-6">
@@ -1348,5 +1348,30 @@ export default function SettingsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Loading fallback component
+function SettingsPageLoading() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
+        <div className="h-16 bg-gray-200 rounded-t-xl"></div>
+        <div className="p-6 space-y-4">
+          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-32 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Main export with Suspense wrapper
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={<SettingsPageLoading />}>
+      <SettingsPageContent />
+    </Suspense>
   );
 }
