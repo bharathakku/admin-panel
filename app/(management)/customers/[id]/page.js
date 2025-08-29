@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Mail, Phone, MapPin } from "lucide-react";
+import { ArrowLeft, Mail, Phone, MapPin, X, Send, CreditCard, Check } from "lucide-react";
 
 // Mock customer data
 const mockCustomers = {
@@ -56,8 +56,54 @@ export default function CustomerDetailsPage() {
   const router = useRouter();
   const customerId = params.id;
   const [activeTab, setActiveTab] = useState('payments');
+  const [showReminderModal, setShowReminderModal] = useState(false);
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+  const [reminderMessage, setReminderMessage] = useState('');
+  const [selectedCreditAmount, setSelectedCreditAmount] = useState(null);
   
   const customer = mockCustomers[customerId] || mockCustomers['CUST-004'];
+  
+  // Predefined reminder messages
+  const predefinedMessages = [
+    "Dear customer, your order is ready for pickup. Please collect it at your earliest convenience.",
+    "Hi! We noticed you have pending payments. Please complete your payment to avoid service interruption.",
+    "Reminder: Your scheduled delivery is coming up soon. Please be available at the delivery location.",
+    "Hello! We have great offers for you. Check out our latest services and book your next ride.",
+    "Thank you for being our valued customer. Don't forget to rate your recent experience with us."
+  ];
+  
+  // Credit amount options
+  const creditOptions = [
+    { amount: 50, label: "₹50 - Welcome Credit", description: "New customer welcome bonus" },
+    { amount: 100, label: "₹100 - Loyalty Reward", description: "For loyal customers" },
+    { amount: 200, label: "₹200 - Compensation", description: "Service issue compensation" },
+    { amount: 500, label: "₹500 - Premium Credit", description: "Special occasion credit" },
+    { amount: 'custom', label: "Custom Amount", description: "Enter custom credit amount" }
+  ];
+  
+  const [customCreditAmount, setCustomCreditAmount] = useState('');
+  
+  const handleSendReminder = () => {
+    if (reminderMessage.trim()) {
+      // Here you would typically send the reminder via API
+      console.log('Sending reminder:', reminderMessage);
+      alert(`Reminder sent to ${customer.name}!`);
+      setShowReminderModal(false);
+      setReminderMessage('');
+    }
+  };
+  
+  const handleGiveCredits = () => {
+    const creditAmount = selectedCreditAmount === 'custom' ? customCreditAmount : selectedCreditAmount;
+    if (creditAmount) {
+      // Here you would typically add credits via API
+      console.log('Adding credits:', creditAmount);
+      alert(`₹${creditAmount} credits added to ${customer.name}'s account!`);
+      setShowCreditsModal(false);
+      setSelectedCreditAmount(null);
+      setCustomCreditAmount('');
+    }
+  };
   
   const tabs = [
     { id: 'orderHistory', label: 'Order History' },
@@ -67,28 +113,36 @@ export default function CustomerDetailsPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="mobile-container sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="mobile-header sm:flex sm:items-center sm:justify-between">
         <div className="flex items-center space-x-4">
           <button 
             onClick={() => router.back()}
-            className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+            className="mobile-touch-target p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <h1 className="text-xl font-bold text-gray-900">
+          <h1 className="mobile-header-title sm:text-xl sm:font-bold text-gray-900">
             Customer Details — {customer.name}
           </h1>
         </div>
-        <div className="flex items-center space-x-3">
-          <button className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium">
+        <div className="mobile-btn-group sm:flex sm:items-center sm:space-x-3">
+          <button 
+            onClick={() => setShowReminderModal(true)}
+            className="mobile-btn sm:px-4 sm:py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium"
+          >
+            <Send className="w-4 h-4 mr-2" />
             Send Reminder
           </button>
-          <button className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium">
+          <button className="mobile-btn sm:px-4 sm:py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium">
             Block
           </button>
-          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium">
+          <button 
+            onClick={() => setShowCreditsModal(true)}
+            className="mobile-btn sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
+          >
+            <CreditCard className="w-4 h-4 mr-2" />
             Give Credits
           </button>
         </div>
@@ -130,14 +184,14 @@ export default function CustomerDetailsPage() {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
         {/* Tab Navigation */}
         <div className="border-b border-gray-100">
-          <nav className="flex space-x-8 px-6">
+          <nav className="mobile-nav-tabs sm:flex sm:space-x-8 sm:px-6">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 px-1 font-medium text-sm transition-colors ${
+                className={`mobile-nav-tab sm:py-4 sm:px-1 font-medium mobile-text-sm sm:text-sm transition-colors ${
                   activeTab === tab.id
-                    ? 'border-b-2 border-gray-900 text-gray-900'
+                    ? 'border-b-2 border-gray-900 text-gray-900 bg-black text-white sm:bg-transparent sm:text-gray-900'
                     : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -259,7 +313,9 @@ export default function CustomerDetailsPage() {
           {activeTab === 'payments' && (
             <div>
               <h4 className="text-lg font-semibold text-gray-900 mb-6">Payments</h4>
-              <div className="overflow-x-auto">
+              
+              {/* Desktop Table */}
+              <div className="responsive-hide-mobile overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-50 border-b border-gray-100">
                     <tr>
@@ -317,6 +373,65 @@ export default function CustomerDetailsPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              
+              {/* Mobile Card View */}
+              <div className="responsive-show-mobile space-y-4">
+                {[
+                  {
+                    txnId: 'TXN-4501',
+                    date: '12 Aug 2023',
+                    method: 'Card',
+                    amount: '₹540',
+                    status: 'Success',
+                    orderId: 'ORD-1001'
+                  },
+                  {
+                    txnId: 'TXN-4410',
+                    date: '11 Jul 2023',
+                    method: 'UPI',
+                    amount: '₹780',
+                    status: 'Pending',
+                    orderId: 'ORD-1022'
+                  },
+                  {
+                    txnId: 'TXN-4309',
+                    date: '24 Jul 2023',
+                    method: 'Card',
+                    amount: '₹340',
+                    status: 'Refunded',
+                    orderId: 'ORD-1013'
+                  }
+                ].map((payment) => (
+                  <div key={payment.txnId} className="border border-gray-100 rounded-xl p-4 hover:bg-gray-50">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <span className="font-medium text-gray-900">{payment.txnId}</span>
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                          payment.status === 'Success' ? 'bg-green-100 text-green-800' :
+                          payment.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {payment.status}
+                        </span>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-gray-900">{payment.amount}</p>
+                        <p className="text-xs text-gray-500">{payment.date}</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-gray-500 mb-1">Method</p>
+                        <p className="font-medium text-gray-900">{payment.method}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-500 mb-1">Order</p>
+                        <p className="font-medium text-gray-900">{payment.orderId}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -377,6 +492,162 @@ export default function CustomerDetailsPage() {
           )}
         </div>
       </div>
+      
+      {/* Send Reminder Modal */}
+      {showReminderModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Send Reminder</h3>
+                <button
+                  onClick={() => setShowReminderModal(false)}
+                  className="mobile-touch-target p-2 rounded-lg hover:bg-gray-100"
+                >
+                  <X className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+              
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 mb-3">Send reminder to: <strong>{customer.name}</strong></p>
+                <p className="text-sm text-gray-500 mb-4">Phone: {customer.phone} | Email: {customer.email}</p>
+              </div>
+              
+              {/* Predefined Messages */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Quick Select:</label>
+                <div className="space-y-2">
+                  {predefinedMessages.map((message, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setReminderMessage(message)}
+                      className="w-full text-left p-3 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                    >
+                      {message.substring(0, 60)}...
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Custom Message */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Custom Message:</label>
+                <textarea
+                  value={reminderMessage}
+                  onChange={(e) => setReminderMessage(e.target.value)}
+                  placeholder="Type your custom reminder message here..."
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows="4"
+                />
+                <p className="text-xs text-gray-500 mt-1">{reminderMessage.length}/500 characters</p>
+              </div>
+              
+              {/* Actions */}
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowReminderModal(false)}
+                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSendReminder}
+                  disabled={!reminderMessage.trim()}
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium flex items-center justify-center"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Send Reminder
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Give Credits Modal */}
+      {showCreditsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Give Credits</h3>
+                <button
+                  onClick={() => setShowCreditsModal(false)}
+                  className="mobile-touch-target p-2 rounded-lg hover:bg-gray-100"
+                >
+                  <X className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+              
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 mb-2">Add credits to: <strong>{customer.name}</strong></p>
+                <p className="text-sm text-gray-500 mb-4">Customer ID: {customer.id}</p>
+              </div>
+              
+              {/* Credit Options */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-3">Select Credit Amount:</label>
+                <div className="space-y-2">
+                  {creditOptions.map((option, index) => (
+                    <div key={index}>
+                      <label className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="creditAmount"
+                          value={option.amount}
+                          checked={selectedCreditAmount === option.amount}
+                          onChange={(e) => setSelectedCreditAmount(e.target.value)}
+                          className="mr-3"
+                        />
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-900">{option.label}</div>
+                          <div className="text-sm text-gray-500">{option.description}</div>
+                        </div>
+                        {selectedCreditAmount === option.amount && (
+                          <Check className="w-5 h-5 text-green-600" />
+                        )}
+                      </label>
+                      
+                      {/* Custom Amount Input */}
+                      {option.amount === 'custom' && selectedCreditAmount === 'custom' && (
+                        <div className="mt-2 ml-8">
+                          <input
+                            type="number"
+                            value={customCreditAmount}
+                            onChange={(e) => setCustomCreditAmount(e.target.value)}
+                            placeholder="Enter amount (₹)"
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            min="1"
+                            max="10000"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Actions */}
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowCreditsModal(false)}
+                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleGiveCredits}
+                  disabled={!selectedCreditAmount || (selectedCreditAmount === 'custom' && !customCreditAmount)}
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium flex items-center justify-center"
+                >
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Add Credits
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

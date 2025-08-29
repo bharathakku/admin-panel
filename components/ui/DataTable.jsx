@@ -17,7 +17,9 @@ export default function DataTable({
   onView,
   searchFields = [],
   filterOptions = {},
-  className = ""
+  className = "",
+  entityType = 'order',
+  entityBasePath
 }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -171,7 +173,11 @@ export default function DataTable({
                 ))}
                 {actions && (
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                    <KebabMenu orderId={row.id} />
+                    <KebabMenu 
+                      entityId={row.id} 
+                      entityType={entityType}
+                      basePath={entityBasePath}
+                    />
                   </td>
                 )}
               </tr>
@@ -180,23 +186,40 @@ export default function DataTable({
         </table>
         
         {/* Mobile Card View */}
-        <div className="responsive-show-mobile mobile-container">
+        <div className="responsive-show-mobile mobile-container-tight">
           {paginatedData.map((row, rowIndex) => (
-            <div key={rowIndex} className="mobile-card">
-              {columns.map((column, colIndex) => (
-                <div key={colIndex} className="mobile-table-cell">
-                  <span className="mobile-table-label">{column.label}:</span>
-                  <span className="mobile-table-value">
-                    {column.render ? column.render(row[column.key], row) : row[column.key]}
-                  </span>
+            <div key={rowIndex} className="mobile-table-card">
+              {/* Card Header with primary info */}
+              <div className="mobile-table-card-header">
+                <div className="flex-1">
+                  {columns[0] && (
+                    <div className="font-semibold text-gray-900 mobile-text-wrap">
+                      {columns[0].render ? columns[0].render(row[columns[0].key], row) : row[columns[0].key]}
+                    </div>
+                  )}
                 </div>
-              ))}
-              {actions && (
-                <div className="mobile-table-cell">
-                  <span className="mobile-table-label">Actions:</span>
-                  <KebabMenu orderId={row.id} />
-                </div>
-              )}
+                {actions && (
+                  <div className="flex-shrink-0 ml-3">
+                    <KebabMenu 
+                      entityId={row.id} 
+                      entityType={entityType}
+                      basePath={entityBasePath}
+                    />
+                  </div>
+                )}
+              </div>
+              
+              {/* Card Content */}
+              <div className="mobile-space-y-3">
+                {columns.slice(1).map((column, colIndex) => (
+                  <div key={colIndex} className="mobile-table-cell">
+                    <span className="mobile-table-label">{column.label}</span>
+                    <span className="mobile-table-value mobile-text-wrap">
+                      {column.render ? column.render(row[column.key], row) : row[column.key]}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>

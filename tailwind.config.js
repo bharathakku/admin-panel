@@ -8,6 +8,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        'xs': '450px',
+        // Add other custom breakpoints if needed
+      },
       colors: {
         brand: {
           black: "#000000",
@@ -18,6 +22,16 @@ module.exports = {
           dark: "#111827",
           mid: "#4B5563",
         },
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+      },
+      minHeight: {
+        '44': '44px', // For touch targets
+      },
+      minWidth: {
+        '44': '44px', // For touch targets
       },
     },
   },

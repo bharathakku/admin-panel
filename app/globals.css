@@ -15,6 +15,13 @@
     padding-bottom: 1rem;
   }
   
+  .mobile-container-tight {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
   .mobile-stack {
     display: flex;
     flex-direction: column;
@@ -30,13 +37,14 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
   
   .mobile-header-title {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    text-align: center;
+    line-height: 1.75rem;
+    color: #111827;
   }
   
   .mobile-header-actions {
@@ -45,14 +53,22 @@
     gap: 0.5rem;
   }
   
+  /* Page header for management pages */
+  .mobile-page-header {
+    padding: 0.75rem;
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 1rem;
+  }
+  
   /* Card utilities */
   .mobile-card {
     background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     border: 1px solid #e5e7eb;
     padding: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
   
   .mobile-card-compact {
@@ -64,13 +80,29 @@
     margin-bottom: 0.75rem;
   }
   
+  /* Enhanced card for better mobile display */
+  .mobile-card-enhanced {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    position: relative;
+  }
+  
   /* Button utilities */
   .mobile-btn {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 0.875rem 1rem;
     font-size: 0.875rem;
     font-weight: 500;
     border-radius: 0.5rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
   
   .mobile-btn-group {
@@ -79,17 +111,36 @@
     gap: 0.5rem;
   }
   
+  .mobile-btn-row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  
+  .mobile-btn-row .mobile-btn {
+    width: auto;
+    flex: 1;
+  }
+  
   /* Text utilities */
   .mobile-text-xs {
     font-size: 0.75rem;
+    line-height: 1rem;
   }
   
   .mobile-text-sm {
     font-size: 0.875rem;
+    line-height: 1.25rem;
   }
   
   .mobile-text-center {
     text-align: center;
+  }
+  
+  .mobile-text-wrap {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
   
   /* Table utilities */
@@ -97,34 +148,93 @@
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
   }
   
   .mobile-table-cell {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 0.25rem 0;
+    align-items: flex-start;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .mobile-table-cell:last-child {
+    border-bottom: none;
   }
   
   .mobile-table-label {
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     color: #4b5563;
+    min-width: 80px;
+    flex-shrink: 0;
   }
   
   .mobile-table-value {
     font-size: 0.875rem;
     color: #111827;
+    text-align: right;
+    flex: 1;
+    margin-left: 1rem;
+  }
+  
+  /* Enhanced table cards for mobile */
+  .mobile-table-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    position: relative;
+  }
+  
+  .mobile-table-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f3f4f6;
   }
   
   /* Navigation utilities */
   .mobile-nav-item {
     width: 100%;
     padding: 0.75rem;
-    text-align: left;
+    text-align: center;
     font-size: 0.875rem;
     font-weight: 500;
     border-radius: 0.5rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .mobile-nav-tabs {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .mobile-nav-tab {
+    flex-shrink: 0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    white-space: nowrap;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
   
   /* Search utilities */
@@ -138,10 +248,12 @@
     width: 100%;
     padding-left: 2.5rem;
     padding-right: 1rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
+    font-size: 0.875rem;
+    min-height: 44px;
   }
   
   .mobile-search-input:focus {
@@ -156,6 +268,79 @@
     top: 50%;
     transform: translateY(-50%);
     color: #9ca3af;
+  }
+  
+  /* Grid utilities */
+  .mobile-grid-auto {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .mobile-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  
+  /* Stats card mobile optimization */
+  .mobile-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Action buttons for table cards */
+  .mobile-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f3f4f6;
+  }
+  
+  /* Status indicators */
+  .mobile-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  
+  /* Improved spacing utilities */
+  .mobile-space-y-2 > * + * {
+    margin-top: 0.5rem;
+  }
+  
+  .mobile-space-y-3 > * + * {
+    margin-top: 0.75rem;
+  }
+  
+  .mobile-space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+  
+  /* Mobile popup menu improvements */
+  .mobile-dropdown {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90vw !important;
+    max-width: 320px !important;
+    margin: 0 !important;
+  }
+  
+  /* Better menu item spacing */
+  .mobile-menu-item {
+    padding: 0.75rem 1rem !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
   }
 }
 

@@ -130,19 +130,62 @@ export default function PartnerDetailsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <button 
-            onClick={() => router.back()}
-            className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
-          <h1 className="text-xl font-bold text-gray-900">
-            Partner Details — {partner.name}
-          </h1>
+      <div className="space-y-4">
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3 min-w-0 flex-1">
+            <button 
+              onClick={() => router.back()}
+              className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 shrink-0"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </button>
+            <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+              Partner Details — {partner.name}
+            </h1>
+          </div>
+          {/* Only show kebab menu on mobile */}
+          <div className="md:hidden">
+            <ThreeDotMenu
+              type="partner"
+              itemId={partnerId}
+              itemData={partner}
+              onAction={(action, data) => {
+                console.log('Partner action:', action, data);
+                // Handle various actions
+                switch (action) {
+                  case 'call':
+                    window.open(`tel:${partner.phone}`);
+                    break;
+                  case 'message':
+                    alert('Send message functionality would be implemented here');
+                    break;
+                  case 'approve':
+                    alert('Partner approval functionality would be implemented here');
+                    break;
+                  case 'suspend':
+                    if (confirm('Are you sure you want to suspend this partner?')) {
+                      alert('Partner suspension functionality would be implemented here');
+                    }
+                    break;
+                  case 'downloadDocs':
+                    alert('Download documents functionality would be implemented here');
+                    break;
+                  case 'remove':
+                    if (confirm('Are you sure you want to remove this partner permanently?')) {
+                      alert('Partner removal functionality would be implemented here');
+                    }
+                    break;
+                  default:
+                    alert(`${action} functionality would be implemented here`);
+                }
+              }}
+            />
+          </div>
         </div>
-        <div className="flex items-center space-x-3">
+
+        {/* Desktop Action Buttons */}
+        <div className="hidden md:flex items-center justify-end space-x-3">
           <button className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium">
             Approve
           </button>
@@ -190,6 +233,22 @@ export default function PartnerDetailsPage() {
               }
             }}
           />
+        </div>
+
+        {/* Mobile Action Buttons */}
+        <div className="grid grid-cols-3 gap-2 md:hidden">
+          <button className="px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium text-sm">
+            Approve
+          </button>
+          <button className="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium text-sm">
+            Suspend
+          </button>
+          <button 
+            onClick={() => router.push(`/partners/${partnerId}/track`)}
+            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm"
+          >
+            Track Live
+          </button>
         </div>
       </div>
 
@@ -240,11 +299,11 @@ export default function PartnerDetailsPage() {
           </div>
         </div>
 
-        <div className="flex items-center space-x-4 mt-6 pt-6 border-t border-gray-100">
-          <button className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:space-x-4 mt-6 pt-6 border-t border-gray-100">
+          <button className="px-4 sm:px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium text-center">
             Download All
           </button>
-          <button className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium">
+          <button className="px-4 sm:px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-center">
             Send Reminder
           </button>
         </div>
@@ -254,12 +313,12 @@ export default function PartnerDetailsPage() {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
         {/* Tab Navigation */}
         <div className="border-b border-gray-100">
-          <nav className="flex space-x-8 px-6">
+          <nav className="flex overflow-x-auto scrollbar-hide px-4 sm:px-6">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex-shrink-0 py-4 px-4 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'border-gray-900 text-gray-900'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -465,14 +524,14 @@ export default function PartnerDetailsPage() {
                 enter="ease-out duration-200" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100"
                 leave="ease-in duration-150" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-4xl mx-auto transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
                   {/* Header */}
-                  <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-                    <div className="flex items-center space-x-3">
-                      <h3 className="text-lg font-semibold text-gray-900">
+                  <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200">
+                    <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                         {selectedDocument?.name}
                       </h3>
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${
                         selectedDocument?.status === 'VERIFIED' ? 'bg-green-100 text-green-800' :
                         selectedDocument?.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'
@@ -482,7 +541,7 @@ export default function PartnerDetailsPage() {
                     </div>
                     <button
                       onClick={() => setIsDocumentModalOpen(false)}
-                      className="p-2 rounded-lg hover:bg-gray-100"
+                      className="p-2 rounded-lg hover:bg-gray-100 flex-shrink-0"
                     >
                       <X className="w-5 h-5 text-gray-500" />
                     </button>
@@ -490,15 +549,15 @@ export default function PartnerDetailsPage() {
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
                     {/* Document Details */}
-                    <div className="p-6 border-r border-gray-200">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-6">Document Details</h4>
-                      <div className="space-y-4">
+                    <div className="p-4 sm:p-6 lg:border-r border-gray-200">
+                      <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6">Document Details</h4>
+                      <div className="space-y-3 sm:space-y-4">
                         {selectedDocument?.details && Object.entries(selectedDocument.details).map(([key, value]) => (
-                          <div key={key} className="flex justify-between items-start">
-                            <span className="text-sm text-gray-600 capitalize">
+                          <div key={key} className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-1 sm:space-y-0">
+                            <span className="text-sm text-gray-600 capitalize font-medium">
                               {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                             </span>
-                            <span className="text-sm font-medium text-gray-900 text-right max-w-48">
+                            <span className="text-sm font-medium text-gray-900 sm:text-right sm:max-w-48">
                               {value}
                             </span>
                           </div>
@@ -507,8 +566,8 @@ export default function PartnerDetailsPage() {
                     </div>
 
                     {/* Document Preview */}
-                    <div className="p-6">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-6">Preview</h4>
+                    <div className="p-4 sm:p-6 border-t lg:border-t-0 border-gray-200">
+                      <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6">Preview</h4>
                       <div className="space-y-4">
                         {/* Front Preview */}
                         <div>
@@ -536,25 +595,25 @@ export default function PartnerDetailsPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200">
                     <button
                       onClick={handleDownloadDocument}
-                      className="flex items-center px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium"
+                      className="flex items-center justify-center px-4 sm:px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium"
                     >
                       <Download className="w-4 h-4 mr-2" />
                       Download
                     </button>
                     
-                    <div className="flex items-center space-x-3">
+                    <div className="grid grid-cols-2 gap-3 sm:flex sm:items-center sm:space-x-3">
                       <button
                         onClick={handleRejectDocument}
-                        className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+                        className="px-4 sm:px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium text-center"
                       >
                         Reject
                       </button>
                       <button
                         onClick={handleMarkAsVerified}
-                        className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium"
+                        className="px-4 sm:px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-center"
                       >
                         Mark as Verified
                       </button>

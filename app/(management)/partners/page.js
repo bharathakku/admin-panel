@@ -246,6 +246,7 @@ export default function PartnersPage() {
         actions={true}
         searchable={true}
         filterable={true}
+        entityType="partner"
       />
     </div>
   );

@@ -306,6 +306,7 @@ export default function OrdersPage() {
             actions={true}
             searchable={true}
             filterable={true}
+            entityType="order"
           />
         </div>
       </div>

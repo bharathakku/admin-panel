@@ -9,17 +9,66 @@ import { useRouter } from "next/navigation";
 // Dimensions in design: 341 x 157 px (desktop)
 // We'll render a fixed width container (w-[341px]) with rounded corners and shadow
 
-export default function KebabMenu({ items, orderId }) {
+export default function KebabMenu({ items, orderId, entityId, entityType = 'order', basePath }) {
   const router = useRouter();
   
-  const defaultItems = [
-    { id: "view", label: "View details", icon: Eye, href: `/orders/${orderId}` },
-    { id: "assign", label: "Assign driver", icon: UserPlus },
-    { id: "track", label: "Track on map", icon: MapPin },
-    { id: "cancel", label: "Cancel order", icon: XCircle, danger: true },
-  ];
+  // Use entityId if provided, otherwise fall back to orderId for backward compatibility
+  const id = entityId || orderId;
+  
+  // Determine the base path based on entity type or custom basePath
+  let defaultBasePath;
+  if (basePath) {
+    defaultBasePath = basePath;
+  } else {
+    switch (entityType) {
+      case 'customer':
+        defaultBasePath = '/customers';
+        break;
+      case 'driver':
+        defaultBasePath = '/drivers';
+        break;
+      case 'partner':
+        defaultBasePath = '/partners';
+        break;
+      case 'order':
+      default:
+        defaultBasePath = '/orders';
+        break;
+    }
+  }
+  
+  const getDefaultItems = () => {
+    switch (entityType) {
+      case 'customer':
+        return [
+          { id: "view", label: "View details", icon: Eye, href: `${defaultBasePath}/${id}` },
+          { id: "edit", label: "Edit customer", icon: UserPlus },
+          { id: "suspend", label: "Suspend", icon: XCircle, danger: true },
+        ];
+      case 'driver':
+        return [
+          { id: "view", label: "View details", icon: Eye, href: `${defaultBasePath}/${id}` },
+          { id: "track", label: "Track location", icon: MapPin },
+          { id: "suspend", label: "Suspend", icon: XCircle, danger: true },
+        ];
+      case 'partner':
+        return [
+          { id: "view", label: "View details", icon: Eye, href: `${defaultBasePath}/${id}` },
+          { id: "edit", label: "Edit partner", icon: UserPlus },
+          { id: "suspend", label: "Suspend", icon: XCircle, danger: true },
+        ];
+      case 'order':
+      default:
+        return [
+          { id: "view", label: "View details", icon: Eye, href: `${defaultBasePath}/${id}` },
+          { id: "assign", label: "Assign driver", icon: UserPlus },
+          { id: "track", label: "Track on map", icon: MapPin },
+          { id: "cancel", label: "Cancel order", icon: XCircle, danger: true },
+        ];
+    }
+  };
 
-  const menuItems = items?.length ? items : defaultItems;
+  const menuItems = items?.length ? items : getDefaultItems();
   
   const handleItemClick = (item) => {
     if (item.href) {
@@ -33,7 +82,7 @@ export default function KebabMenu({ items, orderId }) {
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button
-          className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 focus:outline-none"
+          className="mobile-touch-target p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 focus:outline-none"
           aria-label="Actions"
         >
           <MoreVertical className="w-4 h-4" />
@@ -50,7 +99,7 @@ export default function KebabMenu({ items, orderId }) {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items
-          className="absolute right-0 mt-2 w-[341px] origin-top-right divide-y divide-gray-100 rounded-xl bg-white shadow-xl ring-1 ring-black/5 focus:outline-none z-50"
+          className="absolute right-0 mt-2 w-48 sm:w-[341px] origin-top-right divide-y divide-gray-100 rounded-xl bg-white shadow-xl ring-1 ring-black/5 focus:outline-none z-50"
         >
           <div className="py-2">
             {menuItems.map((item) => {
@@ -60,7 +109,7 @@ export default function KebabMenu({ items, orderId }) {
                   {({ active }) => (
                     <button
                       type="button"
-                      className={`w-full px-3 py-2 flex items-center rounded-lg text-left ${
+                      className={`w-full px-3 py-3 sm:py-2 flex items-center rounded-lg text-left mobile-touch-target ${
                         active ? "bg-gray-50" : ""
                       } ${item.danger ? "text-red-600" : "text-gray-800"}`}
                       onClick={() => handleItemClick(item)}
@@ -70,7 +119,7 @@ export default function KebabMenu({ items, orderId }) {
                           <Icon className="w-4 h-4" />
                         </span>
                       )}
-                      <span className="text-sm font-medium truncate">{item.label}</span>
+                      <span className="mobile-text-sm sm:text-sm font-medium truncate">{item.label}</span>
                     </button>
                   )}
                 </Menu.Item>
