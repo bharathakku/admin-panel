@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { 
   Settings as SettingsIcon,
   Settings,
@@ -74,6 +75,7 @@ import dummyData, { zones as mockZones, filterConfigs } from '@/lib/data/dummyDa
 import { useApi, handleApiError } from '@/lib/api/apiHelpers';
 
 export default function SettingsPage() {
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('general');
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState(null);
@@ -298,11 +300,6 @@ export default function SettingsPage() {
     }
   };
   
-  // Load initial data on component mount
-  useEffect(() => {
-    loadInitialData();
-  }, []);
-
   const tabs = [
     { id: 'general', label: 'General', icon: SettingsIcon },
     { id: 'account', label: 'Account', icon: User },
@@ -316,6 +313,19 @@ export default function SettingsPage() {
     { id: 'security', label: 'Security', icon: Shield },
     { id: 'delivery', label: 'Delivery', icon: Truck }
   ];
+
+  // Handle URL parameters for tab navigation
+  useEffect(() => {
+    const tabParam = searchParams?.get('tab');
+    if (tabParam && tabs.some(tab => tab.id === tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams, tabs]);
+
+  // Load initial data on component mount
+  useEffect(() => {
+    loadInitialData();
+  }, []);
 
   return (
     <div className="space-y-6">
