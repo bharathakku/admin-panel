@@ -102,7 +102,7 @@ export default function Sidebar({ onClickLink, onClose, isOpen }) {
           role="contentinfo"
           aria-label="Application version"
         >
-          <span className="sr-only">Version </span>v1.0.0
+          <span className="sr-only">Version </span>
         </div>
       </footer>
     </aside>
